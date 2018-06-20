@@ -20,6 +20,7 @@
     "gulp-notify": "^3.2.0",
     "gulp-phpcs": "^2.1.0",
     "gulp-phpunit": "^0.26.0",
+    "hoek": "^4.2.1",
     "notify-send": "^0.1.2",
     "q": "^1.5.1",
     "swagger-ui": "^3.17.0",
