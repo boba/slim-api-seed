@@ -28,6 +28,7 @@
                 <directory suffix=".php">./vendor/</directory>
                 <file>./src/public/index.php</file>
                 <file>./src/App/Bootstrap/bootstrap.php</file>
+                <directory>./src/template/</directory>
             </exclude>
         </whitelist>
     </filter>

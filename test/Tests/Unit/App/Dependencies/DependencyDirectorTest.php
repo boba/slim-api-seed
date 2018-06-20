@@ -162,6 +162,7 @@ class DependencyDirectorTest extends TestCase
         $b->expects($this->once())->method('buildLoggingDependencies');
         $b->expects($this->once())->method('buildErrorHandlerDependencies');
         $b->expects($this->once())->method('buildCORSDependencies');
+        $b->expects($this->once())->method('buildTwigView');
 
         $obj = new DependencyDirector($this->_mockContainer);
         $obj->setBuilder($b);

@@ -16,6 +16,7 @@ namespace Tests\Unit\App\Route;
 use App\Route\RouteFactory;
 use PHPUnit\Framework\TestCase;
 use Slim\App;
+use Slim\Container;
 
 /**
  * Class RouteFactoryTest
@@ -28,8 +29,8 @@ use Slim\App;
  */
 class RouteFactoryTest extends TestCase
 {
-
     private $_mockApp;
+    private $_mockContainer;
 
     /**
      * Test setUp
@@ -39,6 +40,7 @@ class RouteFactoryTest extends TestCase
     public function setUp()
     {
         $this->_mockApp = $this->createMock(App::class);
+        $this->_mockContainer = $this->createMock(Container::class);
     }
 
     /**
@@ -55,7 +57,7 @@ class RouteFactoryTest extends TestCase
     }
 
     /**
-     * Test createDefaultRoute()
+     * Test createDefaultRoutes()
      *
      * @uses   \App\Route\RouteFactory::__construct
      * @covers \App\Route\RouteFactory::createDefaultRoutes
@@ -64,9 +66,28 @@ class RouteFactoryTest extends TestCase
      */
     public function testCreateDefaultRoutes()
     {
-        $this->_mockApp->expects($this->once())->method('get')->with($this->equalTo('/'), $this->anything());
+        $this->_mockApp
+            ->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo('/'), $this->anything());
 
         (new RouteFactory())->createDefaultRoutes($this->_mockApp);
+    }
+
+    /**
+     * Test createStaticRoutes()
+     *
+     * @uses   \App\Route\StaticRoute::__construct
+     * @uses   \App\Route\RouteFactory::__construct
+     * @covers \App\Route\RouteFactory::createStaticRoutes
+     *
+     * @return void
+     */
+    public function testCreateStaticRoutes()
+    {
+        $this->_mockApp->expects($this->once())->method('get')->with($this->equalTo('/home'), $this->anything());
+
+        (new RouteFactory($this->_mockContainer))->createStaticRoutes($this->_mockApp);
     }
 
     /**

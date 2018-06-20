@@ -26,6 +26,8 @@ define(
     'APP_SETTINGS',
     [
         'defaults' => [
+            'cache_dir' => '../../cache',
+            'template_dir' => '../template',
             'logger' => '',
             'logger_name' => 'API_LOGGER',
             'log_dir' => '../../logs',
@@ -175,6 +177,7 @@ class AppFactory
         // Configure application routes
         $routeFactory = $factory->createRouteFactory();
         $routeFactory->createDefaultRoutes($app);
+        $routeFactory->createStaticRoutes($app);
         $routeFactory->createHelloRoutes($app);
         $routeFactory->createSwaggerRoutes($app);
 

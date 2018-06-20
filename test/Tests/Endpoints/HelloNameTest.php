@@ -33,6 +33,8 @@ class HelloNameTest extends \PHPUnit\Framework\TestCase
 {
     const TEST_SETTINGS = [
         'defaults' => [
+            'cache_dir' => '../../test/cache',
+            'template_dir' => 'src/template',
             'logger' => '',
             'logger_name' => 'API_LOGGER',
             'log_dir' => '../../test/logs',

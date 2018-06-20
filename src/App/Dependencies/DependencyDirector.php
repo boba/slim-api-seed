@@ -107,6 +107,7 @@ class DependencyDirector
         $this->getBuilder()->buildLoggingDependencies();
         $this->getBuilder()->buildErrorHandlerDependencies();
         $this->getBuilder()->buildCORSDependencies();
+        $this->getBuilder()->buildTwigView();
 
         return $this->getContainer();
     }

@@ -330,6 +330,7 @@ class AppFactoryTest extends TestCase
         $this->_mockDirector->expects($this->once())->method('constructContainer');
 
         $this->_mockRouteFactory->expects($this->once())->method('createDefaultRoutes');
+        $this->_mockRouteFactory->expects($this->once())->method('createStaticRoutes');
         $this->_mockRouteFactory->expects($this->once())->method('createHelloRoutes');
         $this->_mockRouteFactory->expects($this->once())->method('createSwaggerRoutes');
 

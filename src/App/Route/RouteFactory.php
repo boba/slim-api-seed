@@ -56,6 +56,18 @@ class RouteFactory
     }
 
     /**
+     * Create /static routes
+     *
+     * @param App $app The application
+     *
+     * @return void
+     */
+    public function createStaticRoutes($app)
+    {
+        $app->get('/home', new StaticRoute($this->_container, 'home'));
+    }
+
+    /**
      * Create /hello routes
      *
      * @param App $app The application

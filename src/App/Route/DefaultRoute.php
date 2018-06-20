@@ -34,7 +34,7 @@ use Slim\Http\Response;
  *     produces={"application/json"},
  *     consumes={"application/json"},
  *     @SWG\Info(
- *         title="Imaging API",
+ *         title="Slim Framework API Seed",
  *         version="0.1.0"
  *     ),
  *     @SWG\Definition(

@@ -292,6 +292,78 @@ class ContainerBuilder
     }
 
     /**
+     * Create Twig view for static route templates
+     *
+     * @return void
+     */
+    public function buildTwigView()
+    {
+        // Register Twig View helper
+        $this->container['view'] = function ($c) {
+            $ini = $c->get('ini');
+            $cachePath = $c->get('defaults')['cache_dir'];
+            $templatePath = $c->get('defaults')['template_dir'];
+
+            // override cache path with ini setting if available
+            if (isset($ini['API']['CachePath'])) {
+                $cachePath = $ini['API']['CachePath'];
+            }
+
+            // make sure the cache directory exists
+            $this->createCacheDir($cachePath);
+
+            // override template path with ini setting if available
+            if (isset($ini['API']['TemplatePath'])) {
+                $templatePath = $ini['API']['TemplatePath'];
+            }
+
+            $c->get('log')->debug("Using cache path: " . $cachePath);
+            $c->get('log')->debug("Using template path: " . $templatePath);
+
+            $this->container['view_cache_status'] = false;
+            $options = [];
+
+            if (isset($ini['API']['CacheTemplates']) && $ini['API']['CacheTemplates']) {
+                $options['cache'] = $cachePath;
+                $this->container['view_cache_status'] = true;
+            }
+
+            $view = new \Slim\Views\Twig($templatePath, $options);
+
+            // Instantiate and add Slim specific extension
+            $router = $c->get('router');
+            $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
+            $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
+
+            return $view;
+        };
+    }
+
+    /**
+     * Create the cache directory if it doesn't already exist
+     *
+     * @param string $dir Cache directory
+     *
+     * @return bool Returns true if it already exists or it was created
+     */
+    public function createCacheDir($dir)
+    {
+        // make sure the cache directory exists
+        if (!file_exists($dir)) {
+            if (!mkdir($dir, 0777, true)) {
+                error_log('Unable to create cache directory: ' . $dir);
+                return false;
+            } else {
+                // created log directory
+                return true;
+            }
+        } else {
+            // log directory already exists
+            return true;
+        }
+    }
+
+    /**
      * Add CustomPHPErrorHandler to the DI container as errorHandler
      *
      * @return void

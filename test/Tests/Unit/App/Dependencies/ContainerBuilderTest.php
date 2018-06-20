@@ -76,7 +76,10 @@ EOC;
             'invalid.ini' => "I'm so bad I should be in detention",
             'valid.ini' => "[section]\nkey=value\n",
             'test.ini' => self::INI_FILE_CONTENTS
-        ]
+        ],
+        'template' => [
+            'home.html' => "Home Template"
+        ],
     ];
 
     /**
@@ -805,5 +808,113 @@ EOC;
             $c['notAllowedHandler']
         );
         $this->assertInstanceOf(CustomPHPErrorHandler::class, $c['phpErrorHandler']);
+    }
+
+    /**
+     * Test error handler dependency builder
+     *
+     * @uses   \App\Dependencies\ContainerBuilder::__construct
+     * @uses   \App\Dependencies\ContainerBuilder::createCacheDir
+     * @covers \App\Dependencies\ContainerBuilder::buildTwigView
+     *
+     * @return void
+     */
+    public function testBuildTwigView()
+    {
+        $this->_c['defaults'] = [
+            'ini_name' => $this->_root->getChild('ini/test.ini')->url(),
+            'cache_dir' => 'cache_default',
+            'template_dir' => 'template_default'
+        ];
+
+        $this->_c['ini'] = function () {
+            return [
+                'API' => [
+                    'TemplatePath' => $this->_root->getChild('template')->url(),
+                    'CachePath' => $this->_root->url() . '/cache',
+                    'CacheTemplates' => true
+                ]
+            ];
+        };
+
+        $this->_c['log'] = $this->createMock(Logger::class);
+
+        $this->_builder->buildTwigView();
+        $c = $this->_c;
+
+        $this->assertInstanceOf(\Slim\Views\Twig::class, $c['view']);
+    }
+
+    /**
+     * Test createCacheDir
+     *
+     * @uses   \App\Dependencies\ContainerBuilder::__construct
+     * @covers \App\Dependencies\ContainerBuilder::createCacheDir
+     *
+     * @return void
+     */
+    public function testCreateCacheDir()
+    {
+        $this->assertFalse($this->_root->hasChild('cache'));
+
+        // do not use the standard mock because it stubs out createLogDir
+        $builder = new ContainerBuilder($this->_c);
+        $this->assertTrue($builder->createCacheDir($this->_root->url() . '/cache'));
+
+        $this->assertTrue($this->_root->hasChild('cache'));
+    }
+
+    /**
+     * Test createCacheDir where directory already exists
+     *
+     * @uses   \App\Dependencies\ContainerBuilder::__construct
+     * @covers \App\Dependencies\ContainerBuilder::createCacheDir
+     *
+     * @return void
+     */
+    public function testCreateCacheDirAlreadyExists()
+    {
+        $this->assertFalse($this->_root->hasChild('cache'));
+        vfsStream::newDirectory('cache')->at($this->_root);
+        $this->assertTrue($this->_root->hasChild('cache'));
+
+        // do not use the standard mock because it stubs out createLogDir
+        $builder = new ContainerBuilder($this->_c);
+        $this->assertTrue($builder->createCacheDir($this->_root->url() . '/cache'));
+
+        $this->assertTrue($this->_root->hasChild('cache'));
+    }
+
+    /**
+     * Test createCacheDir where directory is not created
+     *
+     * @uses   \App\Dependencies\ContainerBuilder::__construct
+     * @covers \App\Dependencies\ContainerBuilder::createCacheDir
+     *
+     * @return void
+     *
+     * @throws MockEnabledException
+     */
+    public function testCreateCacheDirFailsToCreateDir()
+    {
+        $this->_spyErrorLog->enable();
+
+        // deny write access to the root folder
+        $this->_root->chmod(0555);
+
+        $this->assertFalse($this->_root->hasChild('cache'));
+
+        $cacheDir = $this->_root->url() . '/cache';
+
+        // do not use the standard mock because it stubs out createLogDir
+        $builder = new ContainerBuilder($this->_c);
+        $this->assertFalse($builder->createCacheDir($cacheDir));
+
+        $this->assertFalse($this->_root->hasChild('cache'));
+
+        $this->assertEquals(
+            ["Unable to create cache directory: " . $cacheDir],
+            $this->_spyErrorLog->getInvocations()[0]->getArguments()
+        );
     }
 }

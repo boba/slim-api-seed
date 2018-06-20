@@ -15,6 +15,7 @@
     "require": {
         "php": ">=7.2",
         "slim/slim": "~3.9",
+        "slim/twig-view": "^2.4",
         "monolog/monolog": "~1.23",
         "tuupola/cors-middleware": "^0.7.0"
     },

@@ -77,7 +77,7 @@ class SwaggerRouteTest extends TestCase
         $actual = json_decode($res->getBody(), true);
 
         $this->assertSame('2.0', $actual['swagger']);
-        $this->assertSame('Imaging API', $actual['info']['title']);
+        $this->assertSame('Slim Framework API Seed', $actual['info']['title']);
         $this->assertSame('0.1.0', $actual['info']['version']);
     }
 
