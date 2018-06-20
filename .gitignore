@@ -1,0 +1,9 @@
+.idea
+
+logs/
+test/logs
+test/coverage
+vendor/
+node_modules/
+tmp/
+
