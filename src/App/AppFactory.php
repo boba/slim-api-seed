@@ -6,7 +6,7 @@
  *
  * @category Application
  * @package  App
- * @author   Bob Anderson
+ * @author   Bob Anderson <25436+boba@users.noreply.github.com>
  * @license  http://www.opensource.org/licenses/mit-license.html MIT License
  * @link     https://github.com/boba/slim-api-seed Slim API Seed
  */
@@ -45,7 +45,7 @@ define(
  *
  * @category Application
  * @package  App
- * @author   Bob Anderson
+ * @author   Bob Anderson <25436+boba@users.noreply.github.com>
  * @license  http://www.opensource.org/licenses/mit-license.html MIT License
  * @link     https://github.com/boba/slim-api-seed Slim API Seed
  */
@@ -157,22 +157,22 @@ class AppFactory
     {
         $factory = $this;
 
-        // Create the container
+        // Create a dependency injection container for this application
         $container = $factory->createContainer();
 
-        // Create the Slim App
+        // Create the Slim App object
         $app = new \Slim\App($container);
 
-        // Configure container
+        // Configure and customize the dependency injection container for this application
         $director = $factory->createDirector();
         $director->constructContainer();
 
-        // Add CORS middleware
+        // Add CORS (Cross-Origin Resource Sharing) middleware
         $cors = $container->get('cors_config');
         $app->add(new CorsMiddleware($cors));
         $app->getContainer()->get('log')->debug('CORS Middleware added');
 
-        // Configure routes
+        // Configure application routes
         $routeFactory = $factory->createRouteFactory();
         $routeFactory->createDefaultRoutes($app);
         $routeFactory->createHelloRoutes($app);

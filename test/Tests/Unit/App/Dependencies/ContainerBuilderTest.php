@@ -6,7 +6,7 @@
  *
  * @category Test
  * @package  Tests\Unit\App\Dependencies
- * @author   Bob Anderson
+ * @author   Bob Anderson <25436+boba@users.noreply.github.com>
  * @license  http://www.opensource.org/licenses/mit-license.html MIT License
  * @link     https://github.com/boba/slim-api-seed Slim API Seed
  */
@@ -37,7 +37,7 @@ use Slim\Handlers\PhpError;
  *
  * @category Test
  * @package  Tests\Unit\App\Dependencies
- * @author   Bob Anderson
+ * @author   Bob Anderson <25436+boba@users.noreply.github.com>
  * @license  http://www.opensource.org/licenses/mit-license.html MIT License
  * @link     https://github.com/boba/slim-api-seed Slim API Seed
  */
